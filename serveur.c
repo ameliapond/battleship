@@ -126,12 +126,8 @@ main(int argc, char **argv) {
 		}
 		
 		/* traitement du message */
-		printf("reception d'un message.\n");
-		
-		renvoi(nouv_socket_descriptor);
-						
-		close(nouv_socket_descriptor);
-		
+		printf("reception d'un message.\n");		
+		renvoi(nouv_socket_descriptor);						
+		close(nouv_socket_descriptor);	
     }
-    
 }
