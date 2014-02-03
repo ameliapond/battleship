@@ -5,7 +5,7 @@ typedef struct game{
 	int player2;
 	int grille1[10][10];
 	int grille2[10][10];
-}
+} game;
 
 void initGame(int p1, int p2, game GAME){
 	GAME.player1 = p1;
