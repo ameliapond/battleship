@@ -59,7 +59,7 @@ main(int argc, char **argv) {
     hostent*		ptr_hote; 			/* les infos recuperees sur la machine hote */
     servent*		ptr_service; 			/* les infos recuperees sur le service de la machine */
     char 		machine[TAILLE_MAX_NOM+1]; 	/* nom de la machine locale */
-    
+    game 		GAME[5];			/* parties en cours ( 5 simultanées maximum */
     gethostname(machine,TAILLE_MAX_NOM);		/* recuperation du nom de la machine */
     
     /* recuperation de la structure d'adresse en utilisant le nom */
