@@ -26,16 +26,14 @@ int main(int argc, char **argv) {
     char 	buffer[256];
     char *	prog; 			/* nom du programme */
     char *	host; 			/* nom de la machine distante */
-    char *	mesg; 			/* message envoyé */
-     
-    if (argc != 3) {
-	perror("usage : client <adresse-serveur> <message-a-transmettre>");
+    char 	mesg[256]="connection"; /* message de connection au serveur */
+ 
+    if (argc != 2) {
+	perror("usage : client <adresse-serveur>");
 	exit(1);
     }
    
-    prog = argv[0]; /* nom de l'executable */
     host = argv[1]; /* adresse du serveur */
-    mesg = argv[2]; /* message envoye */
     
     if ((ptr_host = gethostbyname(host)) == NULL) {
 	perror("erreur : impossible de trouver le serveur a partir de son adresse.");
