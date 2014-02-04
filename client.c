@@ -92,9 +92,6 @@ int main(int argc, char **argv) {
 	perror("erreur : impossible d'ecrire le message destine au serveur.");
 	exit(1);
     }
-    
-    /* mise en attente du prgramme pour simuler un delai de transmission */
-    sleep(3);
      
     printf("message envoye au serveur. \n");
                 
@@ -105,11 +102,8 @@ int main(int argc, char **argv) {
     }
     
     printf("\nfin de la reception.\n");
-    
     close(socket_descriptor);
-    
     printf("connexion avec le serveur fermee, fin du programme.\n");
-    
     exit(0);
     
 }
