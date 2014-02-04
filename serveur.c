@@ -19,13 +19,14 @@ typedef struct hostent hostent;
 typedef struct servent servent;
 
 void renvoi (int sock) {
-
-    char buffer[256];
-    int longueur;
+	char buffer[256];
+	char message[256] = "Connection reussie. En attente d'un autre joueur...\n";
+	int longueur;
    
     if ((longueur = read(sock, buffer, sizeof(buffer))) <= 0) 
     	return;
-    write(sock,buffer,strlen(buffer)+1);
+
+    write(sock,message,strlen(message)+1);
     return;
 }
 

@@ -47,7 +47,6 @@ int main(int argc, char **argv) {
     bcopy((char*)ptr_host->h_addr, (char*)&adresse_locale.sin_addr, ptr_host->h_length);
     adresse_locale.sin_family = AF_INET; /* ou ptr_host->h_addrtype; */
     adresse_locale.sin_port = htons(5000);
-    printf("numero de port pour la connexion au serveur : %d \n", ntohs(adresse_locale.sin_port));
     
     /* creation de la socket */
     if ((socket_descriptor = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
@@ -60,9 +59,6 @@ int main(int argc, char **argv) {
 	perror("erreur : impossible de se connecter au serveur.");
 	exit(1);
     }
-    
-    printf("connexion etablie avec le serveur. \n");
-    printf("envoi d'un message au serveur. \n");
       
     /* envoi du message vers le serveur */
     if ((write(socket_descriptor, mesg, strlen(mesg))) < 0) {
@@ -70,16 +66,12 @@ int main(int argc, char **argv) {
 	exit(1);
     }
     
-    printf("message envoye au serveur. \n");
-                
     /* lecture de la reponse en provenance du serveur */
     while((longueur = read(socket_descriptor, buffer, sizeof(buffer))) > 0) {
-	printf("reponse du serveur : \n");
 	write(1,buffer,longueur);
     }
     
-    printf("\nfin de la reception.\n");
     close(socket_descriptor);
-    printf("connexion avec le serveur fermee, fin du programme.\n");
+    //printf("connexion avec le serveur fermee, fin du programme.\n");
     exit(0);
 }
