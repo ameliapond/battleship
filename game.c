@@ -4,5 +4,5 @@
 
 void main(int argc, char **argv){
 	game GAME;
-	GAME.
+	//GAME.init
 	}
