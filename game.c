@@ -4,5 +4,6 @@
 
 void main(int argc, char **argv){
 	game GAME;
-	//GAME.init
+	initStringGrille(GAME.g);
+	afficheGrille(GAME.g);
 	}

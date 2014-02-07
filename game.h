@@ -23,7 +23,7 @@ typedef struct game{
  * de bataille navale.$
  */ 
 void initStringGrille(char grille[300]){
-	char battlefield[300] = "   1 2 3 4 5 6 7 8 9 10\n";
+	char battlefield[300] = "   1 2 3 4 5 6 7 8 9 10\n  1 . . . . . . . . . . \n";
 	int i;
 	for ( i = 0; i < 30; i ++){
 		grille[i] = battlefield[i];
@@ -78,8 +78,8 @@ int navirePlacable(int x, int y, int grille[10][10]){
 void afficheGrille(char grille[300]){
 	int i;
 	
-	for (i = 0; i < 10; i++){
-		printf("%c ",grille[i]);
+	for (i = 0; i < 40; i++){
+		printf("%c",grille[i]);
 	}
 }	
 
