@@ -12,7 +12,7 @@
  *			 2 bateau présent.
  */
 typedef struct game{
-	char g[300];
+	char g[350];
 	int player1;
 	int player2;
 	int grille1[10][10];
@@ -22,10 +22,10 @@ typedef struct game{
 /* Initialise un tableau de 300 caractère avec une grille en ascii pour une partie
  * de bataille navale.$
  */ 
-void initStringGrille(char grille[300]){
-	char battlefield[300] = "   1 2 3 4 5 6 7 8 9 10\n  1 . . . . . . . . . . \n";
+void initStringGrille(char grille[350]){
+	char battlefield[350] = "    1 2 3 4 5 6 7 8 9 10\n  1 . . . . . . . . . . \n  2 . . . . . . . . . . \n  3 . . . . . . . . . . \n  4 . . . . . . . . . .\n  5 . . . . . . . . . . \n  6 . . . . . . . . . .\n  7 . . . . . . . . . . \n  8 . . . . . . . . . .\n  9 . . . . . . . . . . \n 10 . . . . . . . . . . \n";
 	int i;
-	for ( i = 0; i < 30; i ++){
+	for ( i = 0; i < 350; i ++){
 		grille[i] = battlefield[i];
 	}
 }
@@ -75,14 +75,12 @@ int navirePlacable(int x, int y, int grille[10][10]){
 /* 
  * affiche la grille du jeu 
  */
-void afficheGrille(char grille[300]){
+void afficheGrille(char grille[350]){
 	int i;
-	
-	for (i = 0; i < 40; i++){
+	for (i = 0; i < 350; i++){
 		printf("%c",grille[i]);
 	}
 }	
-
 
 
 /*	
