@@ -13,8 +13,8 @@
  */
 typedef struct game{
 	char g[350];
-	int player1;
-	int player2;
+	char player1[20];
+	char player2[20];
 	int grille1[10][10];
 	int grille2[10][10];
 } game;
@@ -30,9 +30,14 @@ void initStringGrille(char grille[350]){
 	}
 }
  	
-void initGame(int p1, int p2, game GAME){
-	GAME.player1 = p1;
-	GAME.player2 = p2;
+void initGame(char p1[20], char p2[20], game GAME){
+	int i, j;
+	
+	for( i = 0; i < 20; i++){
+		GAME.player1[i] = p1[i];
+		printf("%c",GAME.player1[i]);
+		GAME.player2[i] = p2[i];
+	}
 }
 
 int play(game GAME){
@@ -60,12 +65,15 @@ void initGrille(int grille[10][10]){
 int navirePlacable(int x, int y, int grille[10][10]){
 	int place; /* indique le type d'erreur pour le placement du bateau */
 	
+	/* coordinate out of range */
 	if ((x >= 0 && x <= 10) && (y >= 0 && y <= 10)){
 		place = -1;
 	}
+	/* Cell already used */
 	if ( grille[x][y] == 2 ){
 		place = 0;
 	}
+	/* ocean */
 	else if(grille[x][y] == 0){
 		place = 1;
 	}
@@ -82,6 +90,15 @@ void afficheGrille(char grille[350]){
 	}
 }	
 
+/* 
+ * Display the table of size 20 given in parameter. 
+ */
+void afficheJoueur(char joueur[20]){
+	int i;
+	for (i = 0; i < 20; i++){
+		printf("%c",joueur[i]);
+	}
+}
 
 /*	
    1 2 3 4 5 6 7 8 9 10
@@ -99,5 +116,4 @@ void afficheGrille(char grille[350]){
 o : navire placé a flot. 
 x : zone déjà déja tiré.
 . : océan.
- 
 */
