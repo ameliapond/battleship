@@ -11,8 +11,10 @@
  * 			 1 deja tiré ici.
  *			 2 bateau présent.
  */
+#define SIZE_PLATEAU 350
+
 typedef struct game{
-	char g[350];
+	char plateau[SIZE_PLATEAU];
 	char player1[20];
 	char player2[20];
 	int grille1[10][10];
@@ -22,21 +24,23 @@ typedef struct game{
 /* Initialise un tableau de 300 caractère avec une grille en ascii pour une partie
  * de bataille navale.$
  */ 
-void initStringGrille(char grille[350]){
-	char battlefield[350] = "    1 2 3 4 5 6 7 8 9 10\n  1 . . . . . . . . . . \n  2 . . . . . . . . . . \n  3 . . . . . . . . . . \n  4 . . . . . . . . . .\n  5 . . . . . . . . . . \n  6 . . . . . . . . . .\n  7 . . . . . . . . . . \n  8 . . . . . . . . . .\n  9 . . . . . . . . . . \n 10 . . . . . . . . . . \n";
+void initStringGrille(char grille[SIZE_PLATEAU]){
+	char battlefield[SIZE_PLATEAU] = "    1 2 3 4 5 6 7 8 9 10\n  1 . . . . . . . . . . \n  2 . . . . . . . . . . \n  3 . . . . . . . . . . \n  4 . . . . . . . . . .\n  5 . . . . . . . . . . \n  6 . . . . . . . . . .\n  7 . . . . . . . . . . \n  8 . . . . . . . . . .\n  9 . . . . . . . . . . \n 10 . . . . . . . . . . \n";
 	int i;
-	for ( i = 0; i < 350; i ++){
+	for ( i = 0; i < SIZE_PLATEAU; i ++){
 		grille[i] = battlefield[i];
 	}
 }
- 	
-void initGame(char p1[20], char p2[20], game GAME){
+
+/*
+ * @Description Initialise les joueur d'une partie en donnant leur ardresse IP.
+ */ 	
+void initGame(char p1[20], char p2[20], game *GAME){
 	int i, j;
 	
 	for( i = 0; i < 20; i++){
-		GAME.player1[i] = p1[i];
-		printf("%c",GAME.player1[i]);
-		GAME.player2[i] = p2[i];
+		GAME->player1[i] = p1[i];
+		GAME->player2[i] = p2[i];
 	}
 }
 
@@ -83,9 +87,9 @@ int navirePlacable(int x, int y, int grille[10][10]){
 /* 
  * affiche la grille du jeu 
  */
-void afficheGrille(char grille[350]){
+void afficheGrille(char grille[SIZE_PLATEAU]){
 	int i;
-	for (i = 0; i < 350; i++){
+	for (i = 0; i < SIZE_PLATEAU; i++){
 		printf("%c",grille[i]);
 	}
 }	
