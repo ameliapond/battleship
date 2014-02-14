@@ -1,2 +1,6 @@
+CC=gcc
+
 game:game.c game.h
-	gcc -o game game.c
+	$(CC) -o game game.c
+clean:
+	rm -rf game client serveur game.c~ game.h~
