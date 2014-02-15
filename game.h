@@ -43,7 +43,8 @@ void initStringGrille(char grille[SIZE_PLATEAU]){
 void initGame(char p1[20], char p2[20], game *GAME){
 	int i, j;
 	
-	for( i = 0; i < 20; i++){
+	for( i = 0; i < 20; i++)
+	{
 		GAME->player1[i] = p1[i];
 		GAME->player2[i] = p2[i];
 	}
@@ -71,18 +72,21 @@ void initGrille(int grille[10][10]){
 }	
 
 /* 
- * @Brief 	Return 1 if the position is valide to set a boat or 0 else.
+ * @Brief 	Check if a ship is placeable to the position 
  * @Param	x 		x position to check.
  * @Param	y 		y position to check.
- * @Param	grille[][]	
+ * @Param	grille[][]	grille du joueur.	
+ * @Return	1 if the position is valide to set a boat,
+ *		0 else.
  */
-int navirePlacable(int x, int y, int grille[10][10]){
+int isPlaceable(int x, int y, int grille[10][10]){
 	
 	int place = 0;
 	
-	/* if coordinate are in range and the cell targted is valide i.e
-	 * no previous shoot on it or not boat on it
-	*/
+	/* 
+   	 *  If the coordinates are in range and if the position has never
+	 *  been tageted and doesn't have any ship sailing on it.
+	 */
 	if ((x >= 0 && x <= 10) && (y >= 0 && y <= 10))
 	{
 		if ( grille[x][y] == 0 )
@@ -93,26 +97,12 @@ int navirePlacable(int x, int y, int grille[10][10]){
 	return place;
 }
 
-/* 
- * @Desription	Affiche la grille du jeu 
+/* @Description 	Place un bateau dans la grille du joueur correspondant..
+ * @Param	x	x position of the boat.
+ * @Param	y	y position of the boat.
  */
-void afficheGrille(char grille[SIZE_PLATEAU]){
-	int i;
-	for (i = 0; i < SIZE_PLATEAU; i++){
-		printf("%c",grille[i]);
-	}
-}	
-
-/* 
- * @Brief	Display the table of size 20 given in parameter. 
- */
-void afficheJoueur(char joueur[20]){
-	int i;
-	for (i = 0; i < 20; i++){
-		printf("%c",joueur[i]);
-	}
-}
-
+void setShip(int x, int y, int table[10][10]){ table[x-1][y-1] = 2; }
+	
 /* 
  * @Descrption	Actualise plateau en fonction de grille
  * @param 	plateau[] 		Tableau contenant la version chaine de caractere du champ de bataille.
@@ -139,10 +129,9 @@ void matchGrids_int_to_string(char plateau[SIZE_PLATEAU], int grille[10][10], in
 }
 
 /*
- * @Description Initialise le tableau de correspondance
- *		entre les caractere du tableau de caracteres
- 		et les entier du tableau d'entiers.
- * @warning	Cette fonction peut etre optimisee.
+ * @Description Fait la correspondance entre le tableau
+ * 		tab[10][10] du joueur et du plateau 
+		plateau[char size] du jeu.
  */
 void initMatchTable(int matchTable[10][10]){
 	
