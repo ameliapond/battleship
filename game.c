@@ -19,5 +19,11 @@ void main(int argc, char **argv){
 	
 	matchGrids_int_to_string(GAME->plateau, GAME->grille1, match_table);
 	
-	afficheGrille(GAME->plateau);
+	display_char_table(GAME->plateau);
+
+	setShip(1,12,GAME->grille1);
+	
+	matchGrids_int_to_string(GAME->plateau, GAME->grille1, match_table);
+
+	display_char_table(GAME->plateau);
 }
