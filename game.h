@@ -11,19 +11,21 @@
  * 			 1 deja tiré ici.
  *			 2 bateau présent.
  */
-  
+
 #include <stdio.h>
 #include <stdlib.h>
+#include "player.h"
+#include <string.h>
 
 #define SIZE_PLATEAU 	350
-#define START_MATCH 	29
+#define START_MATCH 	 29
+#define SHIP_NUMBER	  5
 
 typedef struct game{
 	char plateau[SIZE_PLATEAU];
-	char player1[20];
-	char player2[20];
-	int grille1[10][10];
-	int grille2[10][10];
+	player player1;
+	player player2;
+	int tour;
 } game;
 
 /* @Brief 	Initialise un tableau de SIZE_PLATEAU caracteres avec une grille en ascii pour une partie
@@ -32,8 +34,23 @@ typedef struct game{
 void initStringGrille(char grille[SIZE_PLATEAU]){
 	char battlefield[SIZE_PLATEAU] = "    1 2 3 4 5 6 7 8 9 10\n  1 . . . . . . . . . . \n  2 . . . . . . . . . . \n  3 . . . . . . . . . . \n  4 . . . . . . . . . . \n  5 . . . . . . . . . . \n  6 . . . . . . . . . . \n  7 . . . . . . . . . . \n  8 . . . . . . . . . . \n  9 . . . . . . . . . .\n 10 . . . . . . . . . . \n";
 	int i;
+	
 	for ( i = 0; i < SIZE_PLATEAU; i ++){
 		grille[i] = battlefield[i];
+	}
+}
+
+/* 
+ * @Brief	Display the table of charater given in parameter. 
+ */
+void display_char_table(char *table){
+
+	int i;
+	size_t size = strlen(table);
+
+	for (i = 0; i < size; i++)
+	{
+		printf("%c",table[i]);
 	}
 }
 
@@ -41,35 +58,18 @@ void initStringGrille(char grille[SIZE_PLATEAU]){
  * @Brief 	Initialise les joueur d'une partie en donnant leur ardresse IP.
  */ 	
 void initGame(char p1[20], char p2[20], game *GAME){
-	int i, j;
 	
+	int i;
+
 	for( i = 0; i < 20; i++)
 	{
-		GAME->player1[i] = p1[i];
-		GAME->player2[i] = p2[i];
+		GAME->player1.adresse_ip[i] = p1[i];
+		GAME->player2.adresse_ip[i] = p2[i];
 	}
+
+	GAME->tour = 0;
 }
 
-/*
- * @Brief 	Gere le deroulement d'une partie.
- */
-int play(game GAME){
-	return 0;
-}
-
-
-/*
- * @Brief 	Initialise la grille en mettant toutes les cases a 0 (ocean). 
- */
-void initGrille(int grille[10][10]){
-	int i;
-	int j;
-	for ( i = 0; i < 10; i++){
-		for ( j = 0; j < 10; j++){
-			grille[i][j] = 0;
-		}
-	}
-}	
 
 /* 
  * @Brief 	Check if a ship is placeable to the position 
@@ -102,6 +102,47 @@ int isPlaceable(int x, int y, int grille[10][10]){
  * @Param	y	y position of the boat.
  */
 void setShip(int x, int y, int table[10][10]){ table[x-1][y-1] = 2; }
+
+/* @Brief	Set the player given as parameter grid with ships it
+ *		will place.
+ */
+void setShips(game *GAME, player p){
+
+	int x, y, i = 0;
+	
+	while ( i < MAX_SHIP )
+	{
+		printf("coordonnees x: ");
+		scanf("%d",&x);
+		printf("coordonnees y: ");
+		scanf("%d",&y);
+		printf("p.grille[7][8]:%d\n",p.grille[7][8]);
+		if (isPlaceable(x, y, p.grille))
+		{
+			setShip(x, y, p.grille);
+			i++;
+		}
+		else
+		{	
+			printf("coordonees invalides!\n");
+	
+		}
+	}
+}
+
+/*
+ * @Brief 	Initialise la grille en mettant toutes les cases a 0 (ocean). 
+ */
+void initGrille(int grille[10][10]){
+	int i;
+	int j;
+	for ( i = 0; i < 10; i++){
+		for ( j = 0; j < 10; j++){
+			grille[i][j] = 0;
+		}
+	}
+}	
+
 	
 /* 
  * @Descrption	Actualise plateau en fonction de grille
@@ -133,7 +174,7 @@ void matchGrids_int_to_string(char plateau[SIZE_PLATEAU], int grille[10][10], in
  * 		tab[10][10] du joueur et du plateau 
 		plateau[char size] du jeu.
  */
-void initMatchTable(int matchTable[10][10]){
+void initMatchTable(int table[10][10]){
 	
 	int 	i, 
 		j,
@@ -143,7 +184,7 @@ void initMatchTable(int matchTable[10][10]){
 	{
 		for (j = 0; j < 10; j++)
 		{
-			matchTable[i][j] = _match;
+			table[i][j] = _match;
 			_match += 2;
 
 		}
@@ -155,6 +196,55 @@ void initMatchTable(int matchTable[10][10]){
 		}
 	}
 }
+
+/*
+ * @Brief 	Gere le deroulement d'une partie.
+ */
+void play(game *GAME, char adrs_ip1[20], char adrs_ip2[20]){
+
+	int match_table[10][10], i, x, y;
+	char pseudo1[SIZE_NAME];	
+	char pseudo2[SIZE_NAME];
+	player p1,p2;
+
+	/* remplissage de la chaine de caracteres representant le plateau de jeu */
+	initStringGrille(GAME->plateau);
+	
+	/* Initialisation du tableau de correspondance plateau(char) et du tableau 10 x 10 des joueurs. */
+	initMatchTable(match_table);
+	
+	/* Matching du plateau(char) et du tableau du joueur1 */
+	matchGrids_int_to_string(GAME->plateau, GAME->player1.grille, match_table);
+	display_char_table(GAME->plateau);
+	
+	/* Initialisation du joueur 1.*/
+	printf("Saisissez votre pseudo: ");
+	scanf("%s",pseudo1);
+	initPlayer(p1, adrs_ip1,pseudo1);
+
+	/* Initialisation du joueur 2. */
+	printf("Saisissez votre pseudo: ");
+	scanf("%s",pseudo2);
+	initPlayer(p2, adrs_ip2,pseudo2);	
+
+	GAME->player1 = p1;
+	GAME->player2 = p2;
+	
+	/* La partie continue tant qu'aucun des joueurs n'a tous ses bateau coulé.*/ 
+	while(GAME->player1.sailing_ship > 0 || GAME->player2.sailing_ship > 0)
+	{	
+		setShips(GAME, GAME->player1);
+		setShips(GAME, GAME->player2);
+		
+		matchGrids_int_to_string(GAME->plateau, GAME->player1.grille, match_table);
+		display_char_table(GAME->plateau);
+		matchGrids_int_to_string(GAME->plateau, GAME->player1.grille, match_table);
+		display_char_table(GAME->plateau);
+
+		GAME->player1.sailing_ship = 0;
+	}
+}
+
 /*	
 
    1 2 3 4 5 6 7 8 9 10

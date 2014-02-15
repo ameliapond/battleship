@@ -1,7 +1,11 @@
-#include <string.h>
+/* function.h */
 
-#define _DIM1		10
-#define _DIM2		10
+/* 
+ * @Brief Contains some usefull table handling functions. 
+ */
+
+#define _DIM1	10
+#define _DIM2	10
 
 /*
  * @Brief	Displays a two dimensions's integers table.
@@ -16,20 +20,6 @@ void display_int_int_table(int tableau[_DIM1][_DIM2]){
 		{
 			printf("%d\n", tableau[i][j]);
 		}
-	}
-}
-
-/* 
- * @Brief	Display the table of charater given in parameter. 
- */
-void display_char_table(char *table){
-
-	int i;
-	size_t size = strlen(table);
-
-	for (i = 0; i < size; i++)
-	{
-		printf("%c",table[i]);
 	}
 }
 
