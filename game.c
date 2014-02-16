@@ -5,8 +5,10 @@
 
 void main(int argc, char **argv){
 
-	game *GAME = (game*)malloc(sizeof(game)) ;
-	
+	game *GAME = (game*)malloc(sizeof(game));
+	GAME->player1 = (player*)malloc(sizeof(player));
+	GAME->player2 = (player*)malloc(sizeof(player));
+
 	char p1[20] = "129.234.33.0";
 	char p2[20] = "129.234.33.1";
 
