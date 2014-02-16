@@ -15,16 +15,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "player.h"
+
+#ifndef STRING_H
 #include <string.h>
+#endif
 
 #define SIZE_PLATEAU 	350
 #define START_MATCH 	 29
-#define SHIP_NUMBER	  5
+#define SHIP_NUMBER	  2
 
 typedef struct game{
 	char plateau[SIZE_PLATEAU];
-	player player1;
-	player player2;
+	player *player1;
+	player *player2;
 	int tour;
 } game;
 
@@ -63,8 +66,8 @@ void initGame(char p1[20], char p2[20], game *GAME){
 
 	for( i = 0; i < 20; i++)
 	{
-		GAME->player1.adresse_ip[i] = p1[i];
-		GAME->player2.adresse_ip[i] = p2[i];
+		GAME->player1->adresse_ip[i] = p1[i];
+		GAME->player2->adresse_ip[i] = p2[i];
 	}
 
 	GAME->tour = 0;
@@ -79,7 +82,7 @@ void initGame(char p1[20], char p2[20], game *GAME){
  * @Return	1 if the position is valide to set a boat,
  *		0 else.
  */
-int isPlaceable(int x, int y, int grille[10][10]){
+int isPlaceable(int x, int y, player *p){
 	
 	int place = 0;
 	
@@ -89,7 +92,7 @@ int isPlaceable(int x, int y, int grille[10][10]){
 	 */
 	if ((x >= 0 && x <= 10) && (y >= 0 && y <= 10))
 	{
-		if ( grille[x][y] == 0 )
+		if ( p->grille[x-1][y-1] == 0 )
 		{
 			place = 1;
 		}
@@ -97,29 +100,31 @@ int isPlaceable(int x, int y, int grille[10][10]){
 	return place;
 }
 
-/* @Description 	Place un bateau dans la grille du joueur correspondant..
+/* @Description 	Set a ship in the player's grid.
  * @Param	x	x position of the boat.
  * @Param	y	y position of the boat.
+ * @Param	p	Pointer on struct player
  */
-void setShip(int x, int y, int table[10][10]){ table[x-1][y-1] = 2; }
+void setShip(int x, int y, player *p){ p->grille[x-1][y-1] = 2; }
 
 /* @Brief	Set the player given as parameter grid with ships it
  *		will place.
  */
-void setShips(game *GAME, player p){
+void setShips(game *GAME, player *p){
 
 	int x, y, i = 0;
 	
+	printf("%s, placez vos navire.\n", p->name);
 	while ( i < MAX_SHIP )
 	{
-		printf("coordonnees x: ");
+		printf("navire %d x: ",i+1);
 		scanf("%d",&x);
-		printf("coordonnees y: ");
+		printf("navire %d y: ",i+1);
 		scanf("%d",&y);
-		printf("p.grille[7][8]:%d\n",p.grille[7][8]);
-		if (isPlaceable(x, y, p.grille))
+		
+		if (isPlaceable(x, y, p))
 		{
-			setShip(x, y, p.grille);
+			setShip(x, y, p);
 			i++;
 		}
 		else
@@ -205,7 +210,9 @@ void play(game *GAME, char adrs_ip1[20], char adrs_ip2[20]){
 	int match_table[10][10], i, x, y;
 	char pseudo1[SIZE_NAME];	
 	char pseudo2[SIZE_NAME];
-	player p1,p2;
+
+	player *p1 = (player*)malloc(sizeof(player));
+	player *p2 = (player*)malloc(sizeof(player));
 
 	/* remplissage de la chaine de caracteres representant le plateau de jeu */
 	initStringGrille(GAME->plateau);
@@ -214,7 +221,7 @@ void play(game *GAME, char adrs_ip1[20], char adrs_ip2[20]){
 	initMatchTable(match_table);
 	
 	/* Matching du plateau(char) et du tableau du joueur1 */
-	matchGrids_int_to_string(GAME->plateau, GAME->player1.grille, match_table);
+	matchGrids_int_to_string(GAME->plateau, GAME->player1->grille, match_table);
 	display_char_table(GAME->plateau);
 	
 	/* Initialisation du joueur 1.*/
@@ -230,18 +237,17 @@ void play(game *GAME, char adrs_ip1[20], char adrs_ip2[20]){
 	GAME->player1 = p1;
 	GAME->player2 = p2;
 	
+	
 	/* La partie continue tant qu'aucun des joueurs n'a tous ses bateau coulé.*/ 
-	while(GAME->player1.sailing_ship > 0 || GAME->player2.sailing_ship > 0)
+	while(GAME->player1->sailing_ship != 0)
 	{	
+		/* Les joueurs placent le navires */
 		setShips(GAME, GAME->player1);
-		setShips(GAME, GAME->player2);
 		
-		matchGrids_int_to_string(GAME->plateau, GAME->player1.grille, match_table);
-		display_char_table(GAME->plateau);
-		matchGrids_int_to_string(GAME->plateau, GAME->player1.grille, match_table);
+		matchGrids_int_to_string(GAME->plateau, GAME->player1->grille, match_table);
 		display_char_table(GAME->plateau);
 
-		GAME->player1.sailing_ship = 0;
+		GAME->player1->sailing_ship = 0;
 	}
 }
 
