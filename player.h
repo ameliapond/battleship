@@ -1,12 +1,14 @@
 /* player.h */
 
-#define MAX_SHIP	5
+#include <string.h>
+
+#define MAX_SHIP	2
 #define DIM1		10
 #define DIM2		10
 #define SIZE_NAME	10
 
 typedef struct player{
-	char name[SIZE_NAME];
+	char *name;
 	int adresse_ip[20];
 	int sailing_ship;
 	int grille[10][10];
@@ -31,21 +33,23 @@ void initTable(int table[10][10]){
 /* 
  * @Brief Set the player's attributes to start a new game.
  */ 
-void initPlayer(player p, char adr_ip[20], char nom[SIZE_NAME]){
+void initPlayer(player *p, char adr_ip[20], char *nom){
 	
 	int i;
-	
+
+	p->name =  (char*)malloc(strlen(nom) * sizeof(char));
+
 	for( i = 0; i < 20; i++)
 	{
-		p.adresse_ip[i] = adr_ip[i];
+		p->adresse_ip[i] = adr_ip[i];
 	}
 
-	for( i = 0; i < SIZE_NAME; i++)
+	for( i = 0; i < strlen(nom); i++)
 	{
-		p.name[i] = nom[i];
+		p->name[i] = nom[i];
 	}
 
-	p.sailing_ship = MAX_SHIP;
+	p->sailing_ship = MAX_SHIP;
 
-	initTable(p.grille);
+	initTable(p->grille);
 }
