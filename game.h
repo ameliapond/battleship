@@ -1,16 +1,5 @@
 /* game.h */
 
-/* @brief definit la structure du jeu.
- * @attr	plateau[]	Game ASCII map.
- * @attr	*player1 	Pointer toward an instance of the first player.
- * @attr 	*player2 	Pointer toward an instance of the second player.
- * @attr 	tour		Game turn.			
- * @warning 		 The integers values in the grid match the following meanings:
- *			 0 ocean/sea.
- * 			 1 Have been shot already.
- *			 2 Ship sailing there.
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "player.h"
@@ -23,6 +12,16 @@
 #define START_MATCH 	 29
 #define SHIP_NUMBER	  2
 
+/* @brief definit la structure du jeu.
+ * @attr	plateau[]	Game ASCII map.
+ * @attr	*player1 	Pointer toward an instance of the first player.
+ * @attr 	*player2 	Pointer toward an instance of the second player.
+ * @attr 	tour		Game turn.			
+ * @warning 		 The integers values in the grid match the following meanings:
+ *			 0 ocean/sea.
+ * 			 1 Have been shot already.
+ *			 2 Ship sailing there.
+ */
 typedef struct game{
 	char plateau[SIZE_PLATEAU];
 	player *player1;
