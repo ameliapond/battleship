@@ -203,17 +203,74 @@ void initMatchTable(int table[10][10]){
 }
 
 /*
+ * @Brief 
+ * @Param 	x 	x position to verify if it's possible to shot.
+ * @Param	y	y position to verify if it's possible to shot.
+ *			Positions are typing by the player.
+ * @Param	player	Pointer toward the player that will get shot.
+ * @Return	1	If the position can be shot ( i.e. if it's int range and
+ *			has never been shot before.
+ *		0 else.
+ */
+int isStrikable(int x, int y, player *p){
+
+	int strikable = 0;
+	
+	/* 
+   	 *  If the coordinates are in range and if the position has never
+	 *  been shot before.
+	 */
+	if ((x >= 0 && x <= 10) && (y >= 0 && y <= 10))
+	{
+		if ( p->grille[x-1][y-1] != 1 )
+		{
+			strikable = 1;
+		}
+	}
+	return strikable;
+}
+
+/*
+ * @Brief Allows to player one to fire in the area given as parameter.
+ * @Param 	x	x position to fire.
+ * @Param 	y 	y position to fire.
+ * @Param	p1 	The player that shoting.
+ * @Param 	p2 	The player that will get shot. 
+ * @Return	0  	Shot in the middle of the ocean...nothing's happen.
+ *		1	Touché ! coulé ! OS ( One Shot ) The ship which was at this 
+ *			position doesn't exist anymore. 
+ */
+int strike(int x, int y, player *p){
+	
+	int result_of_strike = 0;
+	
+	/* If the area selected have a ship */
+	if ( p->grille[x-1][y-1] == 2)
+	{
+		result_of_strike = 1;
+		p->grille[x-1][y-1] = 1;
+	}
+	return result_of_strike;
+}
+	
+/*
  * @Brief 	Gere le deroulement d'une partie.
  */
 void play(game *GAME, char adrs_ip1[20], char adrs_ip2[20]){
 
-	int match_table[10][10], i, x, y;
-	char pseudo1[SIZE_NAME];	
-	char pseudo2[SIZE_NAME];
-
-	player *p1 = (player*)malloc(sizeof(player));
-	player *p2 = (player*)malloc(sizeof(player));
-
+	int	match_table[10][10], 
+		strike_result = 0,		
+		leave_game = 0,	
+		game_turn = 1,				// game_turn = 1 -> player1 plays else player2 plays. 
+		i, 
+		x, 
+		y;		
+	char	pseudo1[SIZE_NAME],	
+		pseudo2[SIZE_NAME];		
+	player	*p1 = (player*)malloc(sizeof(player)),
+		*p2 = (player*)malloc(sizeof(player));
+	 	
+		
 	/* remplissage de la chaine de caracteres representant le plateau de jeu */
 	initStringGrille(GAME->plateau);
 	
@@ -237,19 +294,88 @@ void play(game *GAME, char adrs_ip1[20], char adrs_ip2[20]){
 	GAME->player1 = p1;
 	GAME->player2 = p2;
 	
-	
-	/* La partie continue tant qu'aucun des joueurs n'a tous ses bateau coulé.*/ 
-	while(GAME->player1->sailing_ship != 0)
-	{	
-		/* Les joueurs placent le navires */
-		setShips(GAME, GAME->player1);
-		
-		matchGrids_int_to_string(GAME->plateau, GAME->player1->grille, match_table);
-		display_char_table(GAME->plateau);
+	/* Les joueurs placent leurs navires */
+	setShips(GAME, GAME->player1);
+	setShips(GAME, GAME->player2);
 
-		GAME->player1->sailing_ship = 0;
-	}
-}
+	/* La partie continue tant qu'aucun des joueurs n'a tous ses bateau coulé.*/ 
+	while((GAME->player1->sailing_ship != 0) || (GAME->player2->sailing_ship != 0))
+	{	
+		switch (game_turn)
+		{
+			case 1: /* Player 2 turn game */
+			
+				/* matching plateau et grille du joueur 1. */
+				matchGrids_int_to_string(GAME->plateau, GAME->player1->grille, match_table);
+				display_char_table(GAME->plateau);
+				
+				/* Saisie des coordonnées de tir */
+				printf("%s ,choisissez une zone de tir: \nx: ", GAME->player1->name);
+				scanf("%d", &x);
+				printf("y: ");
+				scanf("%d", &y);
+			
+				while(!isStrikable(x, y, GAME->player2))
+				{
+					/* Saisie des coordonnées de tir */
+					printf("%s, zone de tir invalide!: \nx: ", GAME->player1->name);
+					scanf("%d", &x);
+					printf("y: ");
+					scanf("%d", &y);
+				}
+								
+				switch (strike(x, y, GAME->player2))
+				{
+					case 0:
+						printf("raté\n");break;
+					case 1:
+						printf("Touché!");break;
+						GAME->player2->sailing_ship--;
+					default:
+						printf("Error strike's fail!");break;
+				}
+
+				/* Passage au tour du joueur 2 */
+				game_turn--;
+				break;
+				
+			default : /* Player 2 turn game */
+
+				/* matching plateau et grille du joueur 1. */
+				matchGrids_int_to_string(GAME->plateau, GAME->player2->grille, match_table);
+				display_char_table(GAME->plateau);
+
+				/* Saisie des coordonnées de tir */				
+				printf("%s ,choisissez une zone de tir: \nx: ", GAME->player2->name);
+				scanf("%d", &x);
+				printf("y: ");
+				scanf("%d", &y);
+
+				while(!isStrikable(x, y, GAME->player1))
+				{
+					/* Saisie des coordonnées de tir */
+					printf("%s, zone de tir invalide!: \nx: ", GAME->player2->name);
+					scanf("%d", &x);
+					printf("y: ");
+					scanf("%d", &y);
+				}
+								
+				switch (strike(x, y, GAME->player1))
+				{
+					case 0:
+						printf("raté\n");break;
+					case 1:
+						printf("Touché!");break;
+						GAME->player1->sailing_ship--;
+					default:
+						printf("Error strike's fail!");break;
+				}
+				/* Passage au tour du joueur 1 */
+				game_turn++;
+				break;
+		}/* end switch(game_turn)*/
+	}/* end while */
+}/* end play */
 
 /*	
 
