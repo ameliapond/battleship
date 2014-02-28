@@ -3,34 +3,15 @@
 #include "game.h"
 #include "function.h"
 
-void main(int argc, char **argv){
-
+void main(int argc, char **argv)
+{
 	game *GAME = (game*)malloc(sizeof(game));
+	
 	GAME->player1 = (player*)malloc(sizeof(player));
 	GAME->player2 = (player*)malloc(sizeof(player));
 
-	char p1[20] = "129.234.33.0";
-	char p2[20] = "129.234.33.1";
-
+	int p1 = 129234330;
+	int p2 = 129234331;
+	
 	play(GAME, p1, p2);
-
-/*	int match_table[10][10];
-
-	initStringGrille(GAME->plateau);
-	
-	setPlayerTable(GAME->player1.grille);
-	
-	initMatchTable(match_table);
-	
-	matchGrids_int_to_string(GAME->plateau, GAME->player1.grille, match_table);
-	
-	display_char_table(GAME->plateau);
-
-	setShip(1,7,GAME->player1.grille);
-	
-	matchGrids_int_to_string(GAME->plateau, GAME->player1.grille, match_table);
-
-	display_char_table(GAME->plateau);
-*/
-	
 }

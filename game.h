@@ -9,24 +9,25 @@
 #endif
 
 #define SIZE_PLATEAU 	350
-#define START_MATCH 	 29
-#define SHIP_NUMBER	  2
+#define START_MATCH 	29
+#define SHIP_NUMBER	2
+#define NB_CLIENT_MAX 	10
 
 /* @brief definit la structure du jeu.
- * @attr	plateau[]	Game ASCII map.
- * @attr	*player1 	Pointer toward an instance of the first player.
- * @attr 	*player2 	Pointer toward an instance of the second player.
- * @attr 	tour		Game turn.			
- * @warning 		 The integers values in the grid match the following meanings:
- *			 0 ocean/sea.
- * 			 1 Have been shot already.
- *			 2 Ship sailing there.
+ * @attr	plateau[]		Game ASCII map.
+ * @attr	*player1 		Pointer toward an instance of the first player.
+ * @attr 	*player2 		Pointer toward an instance of the second player.
+ * @attr 	tour			Game turn.			 
+ * @warning 		 		The integers values in the grid match the following meanings:
+ *			 		0 ocean/sea.
+ * 			 		1 Have been shot already.
+ *			 		2 Ship sailing there.
  */
 typedef struct game{
-	char plateau[SIZE_PLATEAU];
+	int tour;   	
+	char plateau[SIZE_PLATEAU];		
 	player *player1;
 	player *player2;
-	int tour;
 } game;
 
 /* 
@@ -57,17 +58,14 @@ void display_char_table(char *table){
 
 /*
  * @Brief 	Set the IP players's IP adress.
+ * @Param 	p1	Player 1 IP adress.
+ * @Param 	p2	Player 2 IP adress.
  */ 	
-void initGame(char p1[20], char p2[20], game *GAME){
+void initGame(int p1, int p2, game *GAME)
+{
 	
-	int i;
-
-	for( i = 0; i < 20; i++)
-	{
-		GAME->player1->adresse_ip[i] = p1[i];
-		GAME->player2->adresse_ip[i] = p2[i];
-	}
-
+	GAME->player1->adresse_ip = p1;
+	GAME->player2->adresse_ip = p2;
 	GAME->tour = 0;
 }
 
@@ -130,7 +128,6 @@ void setShips(game *GAME, player *p){
 		else
 		{	
 			printf("coordonees invalides!\n");
-	
 		}
 	}
 }
@@ -138,7 +135,8 @@ void setShips(game *GAME, player *p){
 /*
  * @Brief 	Initialize the grid by filling it with zeros. 
  */
-void initGrille(int grille[10][10]){
+void initGrille(int grille[10][10])
+{
 	int i;
 	int j;
 	for ( i = 0; i < 10; i++){
@@ -175,7 +173,9 @@ void matchGrids_int_to_string(char plateau[SIZE_PLATEAU], int grille[10][10], in
 }
 
 /*
- * @Description 	Initializes the position of the usefull characters in the ASCII version of the battlefield with their relative position in a table[10][10].
+ * @Description 	Initializes the position of the usefull characters 
+ *			in the ASCII version of the battlefield with their 
+ *			relative position in a table[10][10].
  */
 void initMatchTable(int table[10][10]){
 	
@@ -207,7 +207,7 @@ void initMatchTable(int table[10][10]){
  *			Positions are typing by the player.
  * @Param	player	Pointer toward the player that will get shot.
  * @Return	1	If the position can be shot ( i.e. if it's in range and
- *			has never been shot before.
+ *			has never been shot before ).
  *		0 else.
  */
 int isStrikable(int x, int y, player *p){
@@ -253,7 +253,7 @@ int strike(int x, int y, player *p){
 /*
  * @Brief 	Manage the game play.
  */
-void play(game *GAME, char adrs_ip1[20], char adrs_ip2[20]){
+void play(game *GAME, int adrs_ip1, int adrs_ip2){
 
 	int	match_table[10][10], 
 		strike_result = 0,		
@@ -281,12 +281,12 @@ void play(game *GAME, char adrs_ip1[20], char adrs_ip2[20]){
 	/* Initialize the first player. */
 	printf("Saisissez votre pseudo: ");
 	scanf("%s",pseudo1);
-	initPlayer(p1, adrs_ip1,pseudo1);
+	initPlayer(p1, adrs_ip1, pseudo1);
 
 	/* Initialize the second player. */
 	printf("Saisissez votre pseudo: ");
 	scanf("%s",pseudo2);
-	initPlayer(p2, adrs_ip2,pseudo2);	
+	initPlayer(p2, adrs_ip2, pseudo2);	
 
 	GAME->player1 = p1;
 	GAME->player2 = p2;
