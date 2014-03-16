@@ -6,8 +6,7 @@
 #include <string.h>
 #include <strings.h>
 #include <unistd.h>
-
-#define BUFFER_SIZE		256
+#include "function.h"
 
 typedef struct sockaddr 	sockaddr;
 typedef struct sockaddr_in 	sockaddr_in;
@@ -32,9 +31,7 @@ typedef struct servent 		servent;
  */
 int main(int argc, char **argv) 
 {  
-	int 		socket_descriptor, 	/* descripteur de socket */
-			longueur, 		/* longueur d'un buffer utilisé */
-			state = 0;		/* Client's state for the game */
+	
     	sockaddr_in 	adresse_locale; 	/* adresse de socket local */
     	hostent *	ptr_host; 		/* info sur une machine hote */
 	servent *	ptr_service; 		/* info sur service never used*/    	
@@ -42,7 +39,10 @@ int main(int argc, char **argv)
 	char *		prog;   		/* nom du programme never used */    	  	
 	char *		host; 			/* nom de la machine distante */
     	char *		mesg = NULL;		/* message envoyé */	
-				
+	char		char_tmp_state[2];		/* temporary buffer helping to handle the states */
+	int 		socket_descriptor, 	/* descripteur de socket */
+			int_tmp_state,		/* temporary integer helping to handle the states */	
+			longueur; 		/* longueur d'un buffer utilisé */
 	if (argc != 2) 
 	{
 		perror("usage : client <adresse-serveur>");
@@ -51,9 +51,11 @@ int main(int argc, char **argv)
     	
 	host = argv[1];   
 	mesg = (char*)malloc(BUFFER_SIZE * sizeof(char));
+	
 	mesg[0] = '0';
-	mesg[1] = '\0';
-
+	mesg[1] = '0';
+	mesg[2] = '\0';
+	
 	if ((ptr_host = gethostbyname(host)) == NULL) 
 	{
 		perror("erreur : impossible de trouver le serveur a partir de son adresse.");
@@ -85,16 +87,25 @@ int main(int argc, char **argv)
 	// lecture de la reponse en provenance du serveur 
 	while((longueur = read(socket_descriptor, buffer, sizeof(buffer))) > 0) 
 	{
-		//printf("reponse du serveur :  \n");
-		write(1,buffer,longueur);
+		//Display the server answer
+		write(1,buffer+2,longueur-1);
+		//printf("%s",strndup(1,buffer,strlen(buffer)-1));
     	}
 	
     	close(socket_descriptor);
-	while(1)
-	{  
-		// Get the caractere typed by player.
-	    	fgets(mesg,10,stdin);
-	    	if ((ptr_host = gethostbyname(host)) == NULL) 
+	while(strncmp(buffer,"--",2))
+	{
+		if (strncmp(buffer,"02",2)!=0)
+		{
+			fgets(mesg+2,10,stdin);
+			mesg[0] = buffer[0];
+	    		mesg[1] = buffer[1];
+		}
+
+		mesg[0] = buffer[0];
+	    	mesg[1] = buffer[1];
+		
+		if ((ptr_host = gethostbyname(host)) == NULL) 
 		{
 			perror("erreur : impossible de trouver le serveur a partir de son adresse.");
 			exit(1);
@@ -124,8 +135,8 @@ int main(int argc, char **argv)
 	    	// lecture de la reponse en provenance du serveur 
 	    	while((longueur = read(socket_descriptor, buffer, sizeof(buffer))) > 0) 
 		{
-			// Displays the server answer 
-			write(1,buffer,longueur);
+			// Displays the server answer 			
+			write(1,buffer+2,longueur-1);
     		}
     		close(socket_descriptor);  
 	}

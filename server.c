@@ -8,9 +8,6 @@
 #include "game.h"
 #include "function.h"
 
-#define TAILLE_MAX_NOM	256
-#define NB_CLIENT_MAX 	10
-
 typedef struct sockaddr sockaddr;
 typedef struct sockaddr_in sockaddr_in;
 typedef struct hostent hostent;
@@ -28,12 +25,13 @@ main(int argc, char **argv)
     	servent*	ptr_service; 			/* recuperees sur le service de la machine*/
     	char 		machine[TAILLE_MAX_NOM+1]; 	/* nom de la machine locale */
 	pthread_t	client_t;
+	game		*jeux[5];
 	
 	// recuperation du nom de la machine 
     	gethostname(machine,TAILLE_MAX_NOM);		
-	// Initialization of list of clients IP adresses.	
+	// memory allocation of the list which will contain the clients's IP adresses.	
 	clients_queue = malloc(NB_CLIENT_MAX * sizeof(int));
-	/* recuperation de la structure d'adresse en utilisant le nom */
+	// recuperation de la structure d'adresse en utilisant le nom
 	if ((ptr_hote = gethostbyname(machine)) == NULL) 
     	{
 		perror("erreur : impossible de trouver le serveur a partir de son nom.\n");

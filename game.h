@@ -63,7 +63,6 @@ void display_char_table(char *table){
  */ 	
 void initGame(int p1, int p2, game *GAME)
 {
-	
 	GAME->player1->adresse_ip = p1;
 	GAME->player2->adresse_ip = p2;
 	GAME->tour = 0;

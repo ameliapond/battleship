@@ -1,17 +1,18 @@
 /* function.h */
 
 /* 
- * @Brief Contains some usefull table handling functions. 
+ * @Brief Contains functions definitions. 
  */
 
 #define _DIM1		10
 #define _DIM2		10
 #define BUFFER_SIZE	256
+#define TAILLE_MAX_NOM	256
+#define NB_CLIENT_MAX 	10
 
 /*
- *@Brief
+ *@Brief	Display a table of pointers at integer.
  */
-
 void display_pointer_int_table(int *tab, int size_tab)
 {
 	int i;
@@ -32,15 +33,19 @@ void display_int_int_table(int tableau[_DIM1][_DIM2])
 	{
 		for (j = 0; j < _DIM2; j++)
 		{
-			printf("%d\n", tableau[i][j]);
+			printf("%d ", tableau[i][j]);
 		}
+		printf("\n");
 	}
 }
 
 /*
- * @Brief Set some value in the table *
+ * @Brief 	Initialize a matrice of integer.
+ * @Warning	The matrice in parameter should have both
+ *		dimensions declared to prevent an indetermined 
+ *		behavior.
  */
-void setPlayerTable(int table[_DIM1][_DIM2])
+void init_int_int_table(int table[_DIM1][_DIM2])
 {	
 	int i , j ;
 
@@ -48,10 +53,7 @@ void setPlayerTable(int table[_DIM1][_DIM2])
 	{
 		for ( j = 0; j < _DIM2; j++)
 		{
-			if ( i == j )
-			{
-				table[i][j] = 2;
-			}
+			table[i][j] = 0;
 		}
 	}
 }
@@ -112,28 +114,35 @@ void traitement (int sock, int adress_client, int c_queue[NB_CLIENT_MAX])
 		printf("Unexpected Error. read(sock,buffer,sizeof(buffer)) returns a negative value.\n");
 	}
 	// If the player connect himself for the first time to the server.
-	else if((!strncmp(buffer,"0",1)) && (!isFilled(c_queue)))
+	else if((!strncmp(buffer,"00",2)) && (!isFilled(c_queue)))
 	{	
-		strcpy(buffer,"1Connexion reussie.\nBienvenue dans BATTLESHIP MASTER ALMA 1\nEntrez votre pseudo: ");			
+		strcpy(buffer,"01Connexion reussie.\nBienvenue dans BATTLESHIP MASTER ALMA 1\nEntrez votre pseudo: ");
 		write(sock,buffer,strlen(buffer)+1);
 		// Adding client's IP adress in the table of client.
 		add_to_queue(adress_client, c_queue);			
 	}
 	// If the name has been set.
-	else if(!strncmp(buffer,"1",1))
+	else if(!strncmp(buffer,"01",2))
 	{			
-		strcpy(buffer,"2Vous avez été enregistré dans la file d'attente.\nEn attente d'un autre jouer...\n");
+		strcpy(buffer,"02Vous avez été enregistré dans la file d'attente.\nEn attente d'un autre joueur...\n");
 		write(sock,buffer,strlen(buffer)+1);	
     	}
 	// If the server found another player available.
-	else if(!strncmp(buffer,"2",1))
+	else if(!strncmp(buffer,"02",2))
 	{			
-		strcpy(buffer,"3Un adversaire a été trouvé!\n Début de la partie!\n");
+		strcpy(buffer,"03Un adversaire a été trouvé...\nDébut de la partie.\nPlacez vos navires:\nx: ");
 		write(sock,buffer,strlen(buffer)+1);	
     	}
+	// If the party started.
+	else if(!strncmp(buffer,"03",2))
+	{			
+		strcpy(buffer,"04y: ");
+		write(sock,buffer,strlen(buffer)+1);	
+    	}
+	// Finally if the state is "--" the game is over.
 	else
 	{
-		strcpy(buffer,"exit!\n");
+		strcpy(buffer,"--exit!\n");
 		write(sock,buffer,strlen(buffer)+1);	
 	}
 }

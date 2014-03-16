@@ -13,12 +13,15 @@
  * @attr 	adress_ip	IP adress of the Player's client.
  * @attr	sailing_ship 	Player's ships that still sailling.
  * @attr	grille[][]	Player's map of the battlefield.
+ * @attr	p_state		Player's game state. Say if the player is playing
+ *				or waiting for a party. 0 = waiting, 1 = playing.
  */
 typedef struct player{
 	char *name;
 	int adresse_ip;
 	int sailing_ship;
 	int grille[10][10];
+	int p_state;
 } player;
 
 /*
@@ -55,4 +58,5 @@ void initPlayer(player *p, int adr_ip, char *nom)
 	}
 	p->sailing_ship = MAX_SHIP;
 	initTable(p->grille);
+	p->p_state = 0;
 }
