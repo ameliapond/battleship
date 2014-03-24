@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "game.h"
 #include "function.h"
 
 void main(int argc, char **argv)

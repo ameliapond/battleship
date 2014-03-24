@@ -17,7 +17,7 @@
  *				or waiting for a party. 0 = waiting, 1 = playing.
  */
 typedef struct player{
-	char *name;
+	char name[SIZE_NAME];
 	int adresse_ip;
 	int sailing_ship;
 	int grille[10][10];
@@ -46,13 +46,12 @@ void initTable(int table[10][10])
  * @Param
  * @Param
  */ 
-void initPlayer(player *p, int adr_ip, char *nom)
+void initPlayer(player *p, int adr_ip, char nom[SIZE_NAME])
 {
 	int i;
-	p->name =  (char*)malloc(strlen(nom) * sizeof(char));
 	p->adresse_ip = adr_ip;
 
-	for( i = 0; i < strlen(nom); i++)
+	for( i = 0; i < SIZE_NAME; i++)
 	{
 		p->name[i] = nom[i];
 	}

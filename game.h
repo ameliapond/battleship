@@ -18,6 +18,7 @@
  * @attr	*player1 		Pointer toward an instance of the first player.
  * @attr 	*player2 		Pointer toward an instance of the second player.
  * @attr 	tour			Game turn.			 
+ * @attr	g_state			Equal 0 if the game is not running and 1 otherwise.
  * @warning 		 		The integers values in the grid match the following meanings:
  *			 		0 ocean/sea.
  * 			 		1 Have been shot already.
@@ -28,17 +29,56 @@ typedef struct game{
 	char plateau[SIZE_PLATEAU];		
 	player *player1;
 	player *player2;
+	int g_state;
 } game;
 
 /* 
- * @Brief	Set the characters's table with the ASCII model of the battlefield. 
- */ 
-void initStringGrille(char grille[SIZE_PLATEAU]){
-	char battlefield[SIZE_PLATEAU] = "    1 2 3 4 5 6 7 8 9 10\n  1 . . . . . . . . . . \n  2 . . . . . . . . . . \n  3 . . . . . . . . . . \n  4 . . . . . . . . . . \n  5 . . . . . . . . . . \n  6 . . . . . . . . . . \n  7 . . . . . . . . . . \n  8 . . . . . . . . . . \n  9 . . . . . . . . . .\n 10 . . . . . . . . . . \n";
-	int i;
+ * @Brief 	Check if all the games in the table are running. 
+ * @Param	jeux	The table of game to check .
+ * @Return	0	If all the games in the table aren't running ( i.e. haven't two player initialized).
+ *		1	If the table is completely filled with game which are running.
+ */
+int isAvailable(game jeux[NB_CLIENT_MAX/2])
+{
+	int i = 0;
+	int filled = 1;
 	
-	for ( i = 0; i < SIZE_PLATEAU; i ++){
-		grille[i] = battlefield[i];
+	while ((filled != 0) && (i < NB_CLIENT_MAX/2))
+	{
+		if ( jeux[i].g_state != 2)
+		{
+			filled = 0;
+		}
+		i++;
+	}
+	return filled;			 
+}
+
+/* @Brief 			Check if a game is available in the list of game in parameter.
+ * @Param	listGame	Pointer at the list of games.		 
+ * @Param	size_listGame	Size of the list of games.
+ * @Return	-1		If the game table is filled. Otherwise return the index of 
+ *				the first game which is not running. (i.e waiting for a first player
+ 				or waiting for a second player ).
+ * @Warning			Return the first available game's index found.
+ *		
+ */	
+int waiting_game(game games[NB_CLIENT_MAX/2])
+{
+	int wait_index = -1;
+	int i = 0;
+
+	while((i < NB_CLIENT_MAX/2)  &&  (games[i].g_state == 2))
+	{	
+		i++;
+	}
+	if (i == (NB_CLIENT_MAX/2))
+	{ 
+		return wait_index;
+	}
+	else
+	{
+		return i;
 	}
 }
 
@@ -53,6 +93,18 @@ void display_char_table(char *table){
 	for (i = 0; i < size; i++)
 	{
 		printf("%c",table[i]);
+	}
+}
+
+/* 
+ * @Brief	Set the characters's table with the ASCII model of the battlefield. 
+ */ 
+void initStringGrille(char grille[SIZE_PLATEAU]){
+	char battlefield[SIZE_PLATEAU] = "    1 2 3 4 5 6 7 8 9 10\n  1 . . . . . . . . . . \n  2 . . . . . . . . . . \n  3 . . . . . . . . . . \n  4 . . . . . . . . . . \n  5 . . . . . . . . . . \n  6 . . . . . . . . . . \n  7 . . . . . . . . . . \n  8 . . . . . . . . . . \n  9 . . . . . . . . . .\n 10 . . . . . . . . . . \n";
+	int i;
+	
+	for ( i = 0; i < SIZE_PLATEAU; i ++){
+		grille[i] = battlefield[i];
 	}
 }
 
@@ -303,6 +355,8 @@ void play(game *GAME, int adrs_ip1, int adrs_ip2){
 			
 				/* matching ASCII battlefield version with the table of the first player. */
 				matchGrids_int_to_string(GAME->plateau, GAME->player1->grille, match_table);
+				sleep(2);				
+				system("clear");
 				display_char_table(GAME->plateau);
 				
 				/* Typing of the shot area's coordinates */
@@ -341,6 +395,9 @@ void play(game *GAME, int adrs_ip1, int adrs_ip2){
 
 				/* matching plateau et grille du joueur 1. */
 				matchGrids_int_to_string(GAME->plateau, GAME->player2->grille, match_table);
+				sleep(2);
+				system("clear");
+ 
 				display_char_table(GAME->plateau);
 
 				/* Typing of the shot area's coordinates */				

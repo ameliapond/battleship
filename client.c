@@ -1,4 +1,4 @@
-#include <stdlib.h>
+	#include <stdlib.h>
 #include <stdio.h>
 #include <linux/types.h>
 #include <sys/socket.h>
@@ -6,6 +6,7 @@
 #include <string.h>
 #include <strings.h>
 #include <unistd.h>
+
 #include "function.h"
 
 typedef struct sockaddr 	sockaddr;
@@ -42,7 +43,7 @@ int main(int argc, char **argv)
 	char		char_tmp_state[2];		/* temporary buffer helping to handle the states */
 	int 		socket_descriptor, 	/* descripteur de socket */
 			int_tmp_state,		/* temporary integer helping to handle the states */	
-			longueur; 		/* longueur d'un buffer utilisé */
+			longueur,i; 		/* longueur d'un buffer utilisé */
 	if (argc != 2) 
 	{
 		perror("usage : client <adresse-serveur>");
@@ -89,15 +90,15 @@ int main(int argc, char **argv)
 	{
 		//Display the server answer
 		write(1,buffer+2,longueur-1);
-		//printf("%s",strndup(1,buffer,strlen(buffer)-1));
     	}
 	
     	close(socket_descriptor);
 	while(strncmp(buffer,"--",2))
 	{
+		// if the client is not waiting for an other client connection.
 		if (strncmp(buffer,"02",2)!=0)
-		{
-			fgets(mesg+2,10,stdin);
+		{	
+			fgets(mesg+2,SIZE_NAME,stdin);
 			mesg[0] = buffer[0];
 	    		mesg[1] = buffer[1];
 		}
@@ -136,7 +137,7 @@ int main(int argc, char **argv)
 	    	while((longueur = read(socket_descriptor, buffer, sizeof(buffer))) > 0) 
 		{
 			// Displays the server answer 			
-			write(1,buffer+2,longueur-1);
+			write(1,buffer+2,longueur-2);
     		}
     		close(socket_descriptor);  
 	}
