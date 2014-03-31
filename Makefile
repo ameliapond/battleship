@@ -6,7 +6,7 @@ game:game.c function.h
 client:client.c
 	$(CC) -o client client.c # -Wall -std=c99
 server:server.c
-	$(CC) -o server server.c -lpthread -D_REENTRANT -DLinux # -Wall -std=c99
+	$(CC) -o server server.c -lpthread -D_REENTRANT -DLinux # -Wall  -std=c99
 #game.h player.h: function.h:
 #	@touch game.h player.h
 clean:

@@ -10,7 +10,7 @@
 
 #define SIZE_PLATEAU 	350
 #define START_MATCH 	29
-#define SHIP_NUMBER	2
+#define SHIP_NUMBER		2
 #define NB_CLIENT_MAX 	10
 
 /* @brief definit la structure du jeu.
@@ -65,7 +65,6 @@ int isAvailable(game jeux[NB_CLIENT_MAX/2])
  */	
 int waiting_game(game games[NB_CLIENT_MAX/2])
 {
-	int wait_index = -1;
 	int i = 0;
 
 	while((i < NB_CLIENT_MAX/2)  &&  (games[i].g_state == 2))
@@ -74,7 +73,7 @@ int waiting_game(game games[NB_CLIENT_MAX/2])
 	}
 	if (i == (NB_CLIENT_MAX/2))
 	{ 
-		return wait_index;
+		return -1;
 	}
 	else
 	{
@@ -300,7 +299,7 @@ int strike(int x, int y, player *p){
 	}
 	return result_of_strike;
 }
-	
+
 /*
  * @Brief 	Manage the game play.
  */
@@ -332,12 +331,12 @@ void play(game *GAME, int adrs_ip1, int adrs_ip2){
 	/* Initialize the first player. */
 	printf("Saisissez votre pseudo: ");
 	scanf("%s",pseudo1);
-	initPlayer(p1, adrs_ip1, pseudo1);
+	initPlayer(p1, adrs_ip1, pseudo1, -1);
 
 	/* Initialize the second player. */
 	printf("Saisissez votre pseudo: ");
 	scanf("%s",pseudo2);
-	initPlayer(p2, adrs_ip2, pseudo2);	
+	initPlayer(p2, adrs_ip2, pseudo2, -1);	
 
 	GAME->player1 = p1;
 	GAME->player2 = p2;
@@ -393,7 +392,7 @@ void play(game *GAME, int adrs_ip1, int adrs_ip2){
 				
 			default : /* Player 2 turn game */
 
-				/* matching plateau et grille du joueur 1. */
+				/* matching ASCII battlefield version with the table of the second player. */
 				matchGrids_int_to_string(GAME->plateau, GAME->player2->grille, match_table);
 				sleep(2);
 				system("clear");

@@ -1,4 +1,4 @@
-	#include <stdlib.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include <linux/types.h>
 #include <sys/socket.h>
@@ -91,12 +91,13 @@ int main(int argc, char **argv)
 		//Display the server answer
 		write(1,buffer+2,longueur-1);
     	}
-	
     	close(socket_descriptor);
-	while(strncmp(buffer,"--",2))
+	while(strncmp(buffer,"08",2))
 	{
-		// if the client is not waiting for an other client connection.
-		if (strncmp(buffer,"02",2)!=0)
+		// If the client is not waiting for an other client connection.
+		// the second condition is to jump automaticaly to the begining
+		// the positioning of ships. 
+		if ((strncmp(buffer,"02",2)!=0) && (strncmp(buffer,"03",2)!=0))
 		{	
 			fgets(mesg+2,SIZE_NAME,stdin);
 			mesg[0] = buffer[0];
