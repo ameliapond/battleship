@@ -4,37 +4,18 @@
 #include <sys/socket.h>
 #include <netdb.h>
 #include <string.h>
-#include <strings.h>
-#include <unistd.h>
 
 #include "function.h"
 
-typedef struct sockaddr 	sockaddr;
-typedef struct sockaddr_in 	sockaddr_in;
-typedef struct hostent 		hostent;
-typedef struct servent 		servent;
-/* 
- * @Warning	The following numbers indicates the several states of the client.
- *		0 The client is not yet connected to the server.
- *		1 The client is connected and sending the player's nickname.	
- *		2 
- *		3
- *		4
- *		5
- *		6
- *		7
- *		8
- *		9
- *		10
- *		11
- *		12
- *		13
- */
+typedef struct sockaddr sockaddr;
+typedef struct sockaddr_in sockaddr_in;
+typedef struct hostent hostent;
+typedef struct servent servent;
+
 int main(int argc, char **argv) 
-{  
-	
-    	sockaddr_in 	adresse_locale; 	/* adresse de socket local */
-    	hostent *	ptr_host; 		/* info sur une machine hote */
+{ 
+    sockaddr_in 	adresse_locale; 	/* adresse de socket local */
+    hostent *	ptr_host; 		/* info sur une machine hote */
 	servent *	ptr_service; 		/* info sur service never used*/    	
 	char 		buffer[BUFFER_SIZE];
 	char *		prog;   		/* nom du programme never used */    	  	

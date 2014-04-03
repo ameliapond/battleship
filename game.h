@@ -305,17 +305,17 @@ int strike(int x, int y, player *p){
  */
 void play(game *GAME, int adrs_ip1, int adrs_ip2){
 
-	int	match_table[10][10], 
-		strike_result = 0,		
-		leave_game = 0,	
-		game_turn = 1,				// game_turn = 1 -> player1 plays else player2 plays. 
-		i, 
-		x, 
-		y;		
+	int		match_table[10][10], 
+			strike_result = 0,		
+			leave_game = 0,	
+			game_turn = 1,				// game_turn = 1 -> player1 plays else player2 plays. 
+			i, 
+			x, 
+			y;		
 	char	pseudo1[SIZE_NAME],	
-		pseudo2[SIZE_NAME];		
+			pseudo2[SIZE_NAME];		
 	player	*p1 = (player*)malloc(sizeof(player)),
-		*p2 = (player*)malloc(sizeof(player));
+			*p2 = (player*)malloc(sizeof(player));
 	 	
 		
 	/* Fill the ASCII table of the battlefield */

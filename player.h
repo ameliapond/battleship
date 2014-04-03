@@ -10,8 +10,8 @@
 #define SAILING_SHIP	2
 #define CELL_SHOTED	1
 #define OCEAN		0
-#define WAITING_START   3
-#define SETTING_SHIP	0
+#define WAITING_START   4
+#define SETTING_SHIP	3
 
 /* 
  * @Brief
